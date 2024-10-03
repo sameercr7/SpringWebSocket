@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+<h2>Hello !!</h2>
+<form method="post" th:action="@{/user/formSubmission}">
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="name">Enter Name</label>
+            <input type="text" class="form-control" name="name" id="name" placeholder="Enter Name">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="companyName">Enetr Company Name</label>
+            <input type="text" class="form-control" name="companyName" id="companyName"
+                   placeholder="Enter company Name">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="age">Age</label>
+        <input type="text" class="form-control" name="age" id="age" placeholder="Enter Age">
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<div class="container-fluid">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Action</th>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Company Name</th>
+            <th scope="col">Age</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tbody class="table-primary">
+        <tr th:each="employee:${allEmployeeData}">
+            <td class="no-print">
+                <div class="w-100 h-100 flex justify-content-around">
+                    <a class="btn btn-primary p-0 m-1 " data-toggle="modal" data-target="#exampleModalCenter"
+                       title="Edit"
+                       th:onclick="fetchAllDataById([[${employee.id}]],this)"><i class="fas fa-edit m-2"></i></a>
+                    <a class="btn btn-danger p-0 m-1" title="Delete"
+                       th:onclick="confirmDelete([[${employee.id}]],this)"
+                    >
+
+                        <i class="fas fa-trash-alt m-2"></i>
+                    </a>
+                </div>
+            </td>
+            <td th:text="${employee.id}"></td>
+            <td th:text="${employee.name}"></td>
+
+            <td th:text="${employee.companyName}"></td>
+            <td th:text="${employee.age}"></td>
+
+        </tr>
+
+
+        </tbody>
+    </table>
+
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" th:action="@{/user/updateformSubmission}">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="name"> Id</label>
+                            <input type="text" class="form-control" name="id" id="id" placeholder="Enter Id">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="name">Enter Name</label>
+                            <input type="text" class="form-control" name="name" id="nameForModal"
+                                   placeholder="Enter Name">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="companyName">Enter Company Name</label>
+                            <input type="text" class="form-control" name="companyName" id="companyNameForModal"
+                                   placeholder="Enter company Name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="text" class="form-control" name="age" id="ageForModal" placeholder="Enter Age">
+                    </div>
+
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<!--Script For Deleting bubu by Id hum Id upar se leke aate h aur yhna pe Id mein laarhe okay na-->
+<script>
+    function confirmDelete(Id, row) {
+        console.log("row", row);
+        console.log("Id", Id);
+        fetch('/user/delete/' + Id, {
+            method: 'GET'
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .then(data => {
+                console.log("Deleted successfully");
+                Swal.fire({
+                    title: 'Deleted!',
+                    text: 'The user has been deleted.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
+            })
+            .catch(error => {
+                console.error("Error deleting user:", error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'There was an error deleting the user.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            });
+    }
+
+    function fetchAllDataById(Id, row) {
+        fetch('/data/getAllData/'+Id, {
+            method: 'GET'
+        }).then(response => response.json()).then(data => {
+            console.log("data fetched By Id", data)
+            // Find the data object where the id matches the passed Id
+
+
+
+                // Set the values in the form fields
+                document.getElementById('id').value = data[0].id;
+                document.getElementById('nameForModal').value = data[0].name;
+                document.getElementById('companyNameForModal').value = data[0].companyName;
+                document.getElementById('ageForModal').value = data[0].age;
+
+        })
+
+    }
+</script>
+
+</body>
+</html>
